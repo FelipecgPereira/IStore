@@ -23,7 +23,7 @@ create database iStoreOrders;
 
 create table orders (
  id bigserial not null primary key,
- customer_id bigint not null references customers (id),
+ customer_id bigint not null ,
  order_date timestamp not null default now(),
  payment_key text,
  notes text,
@@ -38,7 +38,6 @@ create table orders (
 create table order_items (
  id bigserial not null primary key,
  order_id bigint not null references orders (id),
- product_id bigint not null references products (id),
+ product_id bigint not null ,
  quantity int not null,
  unit_price decimal(16,2) not null
-);
