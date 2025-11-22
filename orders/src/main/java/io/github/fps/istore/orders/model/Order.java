@@ -7,7 +7,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -49,5 +48,5 @@ public class Order {
     private List<OrderItem> itens ;
 
     @Transient
-    private DatailsPayment detailsPayment;
+    private DetailsPayment detailsPayment;
 }

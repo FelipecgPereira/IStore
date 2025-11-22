@@ -4,7 +4,7 @@ import io.github.fps.istore.orders.model.enums.PaymentType;
 import lombok.Data;
 
 @Data
-public class DatailsPayment {
+public class DetailsPayment {
     String details;
     PaymentType paymentType;
 }

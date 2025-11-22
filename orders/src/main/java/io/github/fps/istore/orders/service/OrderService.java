@@ -1,7 +1,10 @@
 package io.github.fps.istore.orders.service;
 
 import io.github.fps.istore.orders.client.BankServiceClient;
+import io.github.fps.istore.orders.model.DetailsPayment;
 import io.github.fps.istore.orders.model.Order;
+import io.github.fps.istore.orders.model.enums.PaymentType;
+import io.github.fps.istore.orders.model.exception.ItemNotFoundException;
 import io.github.fps.istore.orders.repository.OrderItemRespository;
 import io.github.fps.istore.orders.repository.OrderRepository;
 import io.github.fps.istore.orders.validator.OrderValidator;
@@ -10,8 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static io.github.fps.istore.orders.model.enums.OrderStatus.PAID;
-import static io.github.fps.istore.orders.model.enums.OrderStatus.PAYMENT_ERROR;
+import static io.github.fps.istore.orders.model.enums.OrderStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -62,5 +64,28 @@ public class OrderService {
         }
 
         repository.save(order);
+    }
+    @Transactional
+    public void newPayment(Long orderCode, String paymentDetails, PaymentType type){
+        var orderFound = repository.findById(orderCode);
+
+        if(orderFound.isEmpty()){
+            throw  new ItemNotFoundException("Order not found");
+        }
+
+        var order = orderFound.get();
+
+        var detailsPayment = new DetailsPayment();
+        detailsPayment.setDetails(paymentDetails);
+        detailsPayment.setPaymentType(type);
+        order.setDetailsPayment(detailsPayment);
+        order.setStatus(PLACED);
+        order.setNotes("New payment");
+
+        repository.save(order);
+
+        var newPaymentKey = bankClient.requestPayment(order);
+        order.setPaymentKey(newPaymentKey);
+
     }
 }
