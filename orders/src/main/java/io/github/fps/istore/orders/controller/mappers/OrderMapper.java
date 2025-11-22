@@ -4,7 +4,6 @@ import io.github.fps.istore.orders.controller.dto.NewOrderDTO;
 import io.github.fps.istore.orders.controller.dto.OrderItemDTO;
 import io.github.fps.istore.orders.model.Order;
 import io.github.fps.istore.orders.model.OrderItem;
-import io.github.fps.istore.orders.model.enums.OrderStatus;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -12,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static io.github.fps.istore.orders.model.enums.OrderStatus.PAID;
 import static io.github.fps.istore.orders.model.enums.OrderStatus.PLACED;
 
 @Mapper(componentModel = "spring")

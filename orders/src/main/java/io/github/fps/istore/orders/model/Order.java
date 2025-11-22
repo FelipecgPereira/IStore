@@ -1,6 +1,7 @@
 package io.github.fps.istore.orders.model;
 
 
+import io.github.fps.istore.orders.client.representation.ClientRepresentation;
 import io.github.fps.istore.orders.model.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -49,4 +50,7 @@ public class Order {
 
     @Transient
     private DetailsPayment detailsPayment;
+
+    @Transient
+    private ClientRepresentation client;
 }

@@ -4,4 +4,13 @@
     <option name="defaultUnitInitialized" value="true" />
     <option name="renamerInitialized" value="true" />
   </component>
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit moduleName="orders" name="Default">
+        <packages>
+          <package value="io.github.fps.istore.orders" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
 </project>

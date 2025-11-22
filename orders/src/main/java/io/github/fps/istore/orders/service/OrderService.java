@@ -1,8 +1,11 @@
 package io.github.fps.istore.orders.service;
 
 import io.github.fps.istore.orders.client.BankServiceClient;
+import io.github.fps.istore.orders.client.ClientsClient;
+import io.github.fps.istore.orders.client.ProductClient;
 import io.github.fps.istore.orders.model.DetailsPayment;
 import io.github.fps.istore.orders.model.Order;
+import io.github.fps.istore.orders.model.OrderItem;
 import io.github.fps.istore.orders.model.enums.PaymentType;
 import io.github.fps.istore.orders.model.exception.ItemNotFoundException;
 import io.github.fps.istore.orders.repository.OrderItemRespository;
@@ -13,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 import static io.github.fps.istore.orders.model.enums.OrderStatus.*;
 
 @Service
@@ -22,6 +28,8 @@ public class OrderService {
     private final OrderRepository repository;
     private final OrderItemRespository itemRespository;
     private final OrderValidator validator;
+    private final ClientsClient apiClient;
+    private final ProductClient apiProduct;
     private final BankServiceClient bankClient;
 
 
@@ -87,5 +95,26 @@ public class OrderService {
         var newPaymentKey = bankClient.requestPayment(order);
         order.setPaymentKey(newPaymentKey);
 
+    }
+
+
+    public Optional<Order> getOrder(Long input){
+       Optional<Order> order =  repository.findById(input);
+
+      order.ifPresent(this::getDataClient);
+      order.ifPresent(this::getDataProduct);
+
+      return order;
+    }
+
+    private void getDataClient(Order input){
+        var codeClient = input.getCustomerId();
+        var response = apiClient.get(codeClient);
+        input.setClient(response.getBody());
+    }
+
+    private void getDataProduct(Order input){
+        List<OrderItem> itens = itemRespository.findByOrder(input);
+        input.setItens(itens);
     }
 }
